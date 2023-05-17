@@ -3,7 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 
 # Read in the CSV file of company domains
-with open('data-ws-2022.csv', newline='') as csvfile:
+with open('ADD .CSV FILE PATH HERE', newline='') as csvfile:
     reader = csv.reader(csvfile)
     domains = [row[0] for row in reader]
 
