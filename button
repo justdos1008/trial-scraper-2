@@ -1,0 +1,33 @@
+import csv
+import requests
+from bs4 import BeautifulSoup
+
+# Read in the CSV file of company domains
+with open('data-ws-2022.csv', newline='') as csvfile:
+    reader = csv.reader(csvfile)
+    domains = [row[0] for row in reader]
+
+# Create a new CSV file to record the results
+with open('free_trial_companies.csv', 'w', newline='') as csvfile:
+    writer = csv.writer(csvfile)
+    writer.writerow(['Company', 'Free Trial'])
+
+# Loop through each domain and check for a free trial
+for domain in domains:
+    url = 'https://' + domain
+    try:
+        response = requests.get(url, timeout=5)
+        soup = BeautifulSoup(response.text, 'html.parser')
+        free_trial_button = soup.find('button', string=lambda text: text and 'free' in text.lower())
+        if free_trial_button:
+            with open('free_trial_companies.csv', 'a', newline='') as csvfile:
+                writer = csv.writer(csvfile)
+                writer.writerow([domain, 'Yes'])
+        else:
+            with open('free_trial_companies.csv', 'a', newline='') as csvfile:
+                writer = csv.writer(csvfile)
+                writer.writerow([domain, 'No'])
+    except:
+        with open('free_trial_companies.csv', 'a', newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow([domain, 'Error'])
